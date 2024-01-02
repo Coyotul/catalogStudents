@@ -11,4 +11,9 @@ public class Subject
         subject = subjectName;
     }
 
+    void addGrade(int grade)
+    {
+        grades.put(grade,new Date());
+    }
+
 }
