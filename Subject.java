@@ -1,19 +1,37 @@
+import java.util.ArrayList;
 import java.util.Date;
-import java.util.Map;
+import java.util.List;
 
 public class Subject
 {
     private String subject;
-    private Map<Integer, Date> grades;
+    private List<Integer> grades;
+    private List<Date> dates;
 
     Subject(String subjectName)
     {
         subject = subjectName;
+        grades = new ArrayList<>();
+        dates = new ArrayList<>();
     }
 
-    void addGrade(int grade)
+    void addGrade(Integer grade)
     {
-        grades.put(grade,new Date());
+        grades.add(grade);
+        dates.add(new Date());
+    }
+    public String getName()
+    {
+        return subject;
     }
 
+
+    public List<Integer> getGrades()
+    {
+        return grades;
+    }
+    public List<Date> getDates()
+    {
+        return dates;
+    }
 }

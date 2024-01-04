@@ -28,4 +28,18 @@ public class Professor
         lastName = lName;
         subjects = Subjects;
     }
+
+    public String getFirstName()
+    {
+        return firstName;
+    }
+    public String getLastName()
+    {
+        return lastName;
+    }
+
+    public List<String> getSubjects()
+    {
+        return subjects;
+    }
 }
