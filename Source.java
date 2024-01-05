@@ -74,7 +74,7 @@ public class Source
                 System.out.println("2:Alegeti 2 sa sortati lista de discipline asociate");
                 System.out.println("3:Alegeti 3 sa sortati lista de elevi");
                 System.out.println("4:Alegeti 4 sa salvati toate datele in fisier");
-                System.out.println("5:Alegeti 5 sa afisati notele");
+                System.out.println("5:Alegeti 5 sa afisati notele elevilor");
                 System.out.println("0:Exit");
                 Integer input2 = scanner.nextInt();
                 scanner.nextLine();
@@ -139,6 +139,31 @@ public class Source
                         continue;
                     case 4:
                         PrintData("file.out",profesors,students);
+                        continue;
+                    case 5:
+                        writer.write("Studenti:\n");
+                        for(int i=0;i< students.size();i++)
+                        {
+                            System.out.print(students.get(i).getFirstName());
+                            System.out.print(" ");
+                            System.out.print(students.get(i).getLastName());
+                            System.out.println();
+                            System.out.print("Materii si note:\n");
+                            for(int j = 0; j<students.get(i).getSubjects().size(); j++)
+                            {
+                                System.out.print(students.get(i).getSubjects().get(j).getName());
+                                System.out.print(" ");
+                                for(int k=0;k<students.get(i).getSubjects().get(j).getGrades().size();k++)
+                                {
+                                    System.out.print(students.get(i).getSubjects().get(j).getGrades().get(k).toString());
+                                    System.out.print(" ");
+                                    System.out.print(students.get(i).getSubjects().get(j).getDates().get(k).toString());
+                                }
+                                System.out.println();
+                            }
+                            System.out.println();
+                            System.out.println();
+                        }
                         continue;
                 }
             }
