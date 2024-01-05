@@ -1,7 +1,5 @@
 import java.io.*;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Scanner;
+import java.util.*;
 
 public class Source
 {
@@ -127,8 +125,17 @@ public class Source
                         System.out.println("Nota adaugata cu succes!");
                         continue;
                     case 2:
+                        Collections.sort(profesors.get(id).getSubjects(), Comparator.naturalOrder());
+                        System.out.println("Sortare efectuata cu succes");
                         continue;
                     case 3:
+                        Collections.sort(students, new Comparator<Student>() {
+                            @Override
+                            public int compare(Student o1, Student o2) {
+                                return o1.getLastName().compareTo(o2.getLastName());
+                            }
+                        });
+                        System.out.println("Sortare efectuata cu succes");
                         continue;
                     case 4:
                         PrintData("file.out",profesors,students);
@@ -240,9 +247,6 @@ public class Source
             e.printStackTrace();
         }
     }
-
-
-
 
     private static void PrintData( String fileName,List<Professor> professors,List<Student> students) {
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(fileName))) {
