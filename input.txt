@@ -17,7 +17,7 @@ popescu
 2
 Matematica
 Fizica
-8
+9
 George
 Constantin
 george18
@@ -42,3 +42,6 @@ ionescuel
 Adrian
 Dumitru
 adriancelsmecher
+Lionel
+Messi
+messi8baloaneaur

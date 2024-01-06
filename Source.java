@@ -141,7 +141,7 @@ public class Source
                         PrintData("file.out",profesors,students);
                         continue;
                     case 5:
-                        writer.write("Studenti:\n");
+                        System.out.println("Studenti:\n");
                         for(int i=0;i< students.size();i++)
                         {
                             System.out.print(students.get(i).getFirstName());
