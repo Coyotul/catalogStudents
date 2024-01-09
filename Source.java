@@ -278,9 +278,9 @@ public class Source
                 passwords.add(password);
 
                 Student student = new Student(fName, lName);
-                for(subject: stringSubjects)
+                for(String subject: stringSubjects)
                 {
-                    
+                    student.addSubject(subject);
                 }
                 students.add(student);
 
