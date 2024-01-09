@@ -1,4 +1,6 @@
 import java.io.*;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.*;
 
 public class Source
@@ -75,8 +77,9 @@ public class Source
                 System.out.println("3:Alegeti 3 sa sortati lista de elevi");
                 System.out.println("4:Alegeti 4 sa salvati toate datele in fisier");
                 System.out.println("5:Alegeti 5 sa afisati notele elevilor");
+                System.out.println("6:Citire backup");
                 System.out.println("0:Exit");
-                Integer input2 = scanner.nextInt();
+                int input2 = scanner.nextInt();
                 scanner.nextLine();
                 switch (input2)
                 {
@@ -102,7 +105,7 @@ public class Source
                         System.out.println("Introduceti Nota");
                         Integer nota = scanner.nextInt();
                         scanner.nextLine();
-                        Integer index1=-1,index2=-1;
+                        int index1=-1,index2=-1;
                         for(int i=0;i<students.size();i++)
                         {
                             if(students.get(i).getFirstName().equals(fnameInput) && students.get(i).getLastName().equals(lnameInput))
@@ -129,7 +132,7 @@ public class Source
                         System.out.println("Sortare efectuata cu succes");
                         continue;
                     case 3:
-                        Collections.sort(students, new Comparator<Student>() {
+                        students.sort(new Comparator<Student>() {
                             @Override
                             public int compare(Student o1, Student o2) {
                                 return o1.getLastName().compareTo(o2.getLastName());
@@ -138,26 +141,23 @@ public class Source
                         System.out.println("Sortare efectuata cu succes");
                         continue;
                     case 4:
-                        PrintData("file.out",profesors,students);
+                        PrintData("file.out",profesors,students,passwords);
                         continue;
                     case 5:
                         System.out.println("Studenti:\n");
-                        for(int i=0;i< students.size();i++)
-                        {
-                            System.out.print(students.get(i).getFirstName());
+                        for (Student student : students) {
+                            System.out.print(student.getFirstName());
                             System.out.print(" ");
-                            System.out.print(students.get(i).getLastName());
+                            System.out.print(student.getLastName());
                             System.out.println();
                             System.out.print("Materii si note:\n");
-                            for(int j = 0; j<students.get(i).getSubjects().size(); j++)
-                            {
-                                System.out.print(students.get(i).getSubjects().get(j).getName());
+                            for (int j = 0; j < student.getSubjects().size(); j++) {
+                                System.out.print(student.getSubjects().get(j).getName());
                                 System.out.print(" ");
-                                for(int k=0;k<students.get(i).getSubjects().get(j).getGrades().size();k++)
-                                {
-                                    System.out.print(students.get(i).getSubjects().get(j).getGrades().get(k).toString());
+                                for (int k = 0; k < student.getSubjects().get(j).getGrades().size(); k++) {
+                                    System.out.print(student.getSubjects().get(j).getGrades().get(k).toString());
                                     System.out.print(" ");
-                                    System.out.print(students.get(i).getSubjects().get(j).getDates().get(k).toString());
+                                    System.out.print(student.getSubjects().get(j).getDates().get(k).toString());
                                 }
                                 System.out.println();
                             }
@@ -165,6 +165,8 @@ public class Source
                             System.out.println();
                         }
                         continue;
+                    case 6:
+                        ReadBackup(profesors,students,passwords);
                 }
             }
             else
@@ -172,7 +174,7 @@ public class Source
                 System.out.println("Meniu Elev:");
                 System.out.println("1:Alegeti 1 ca sa va vedeti toate notele:");
                 System.out.println("2:Exit");
-                Integer input2 = scanner.nextInt();
+                int input2 = scanner.nextInt();
                 scanner.nextLine();
                 if(input2 == 1)
                 {
@@ -238,6 +240,75 @@ public class Source
         }
     }
 
+    private static void ReadBackup(List<Professor> professors, List<Student> students, List<String> passwords) {
+        String fileName = "file.out";
+        try (FileReader fileReader = new FileReader(fileName);
+             BufferedReader reader = new BufferedReader(fileReader)) {
+
+            int size = Integer.parseInt(reader.readLine());
+
+            professors.clear();
+            students.clear();
+            passwords.clear();
+            List<String> stringSubjects = new ArrayList<>();
+
+            for (int i = 0; i < size; i++) {
+                String fName = reader.readLine();
+                String lName = reader.readLine();
+                String password = reader.readLine();
+                passwords.add(password);
+
+                int m = Integer.parseInt(reader.readLine());
+                List<String> subjects = new ArrayList<>();
+                for (int j = 0; j < m; j++) {
+                    String subject = reader.readLine();
+                    subjects.add(subject);
+                    stringSubjects.add(subject);
+                }
+
+                professors.add(new Professor(fName, lName, subjects));
+            }
+
+            int k = Integer.parseInt(reader.readLine());
+
+            for (int i = 0; i < k; i++) {
+                String fName = reader.readLine();
+                String lName = reader.readLine();
+                String password = reader.readLine();
+                passwords.add(password);
+
+                Student student = new Student(fName, lName);
+                for(subject: stringSubjects)
+                {
+                    
+                }
+                students.add(student);
+
+                int studentSubjectsSize = Integer.parseInt(reader.readLine());
+                for (int j = 0; j < studentSubjectsSize; j++) {
+                    int grades = Integer.parseInt(reader.readLine());
+                    for (int index = 0; index < grades; index++) {
+                        int grade = Integer.parseInt(reader.readLine());
+                        Date date = new Date();
+                        try {
+                            date = new SimpleDateFormat("yyyy-MM-dd").parse(reader.readLine());
+                        } catch (ParseException e) {
+                            System.out.println("Eroare la conversia datei");
+                            date = new Date();
+                        }
+                        students.get(i).getSubjects().get(j).addGradeWithDate(grade, date);
+                    }
+                }
+            }
+
+        } catch (FileNotFoundException e) {
+            System.out.println("Eroare la citirea fisierului de backup");
+        } catch (IOException e) {
+            System.out.println("Eroare la citirea fisierului de backup");
+        }
+    }
+
+
     private static void ReadData(List<Professor> professors, List<Student> students,List<String> passwords) {
         String fileName = "input.txt";
         try (FileReader fileReader = new FileReader(fileName);
@@ -267,58 +338,60 @@ public class Source
             }
 
         } catch (FileNotFoundException e) {
-            e.printStackTrace();
+            System.out.println("error");
+
         } catch (IOException e) {
-            e.printStackTrace();
+            System.out.println("error2");
         }
     }
 
-    private static void PrintData( String fileName,List<Professor> professors,List<Student> students) {
+    private static void PrintData( String fileName,List<Professor> professors,List<Student> students,List<String> passwords) {
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(fileName))) {
-            writer.write("\n\nInformatii despre profesori si studenti:\n\n");
-            writer.write("Profesori:\n");
+            writer.write(String.valueOf(professors.size()));
+            writer.write('\n');
+            Integer index=0;
             for(int i=0;i< professors.size();i++)
             {
                 writer.write(professors.get(i).getFirstName());
-                writer.write(" ");
+                writer.write("\n");
                 writer.write(professors.get(i).getLastName());
                 writer.newLine();
-                writer.write("Materii predate: ");
+                writer.write(passwords.get(index++));
+                writer.newLine();
+                writer.write(String.valueOf(professors.get(i).getSubjects().size()));
+                writer.newLine();
                 for(int j=0;j<professors.get(i).getSubjects().size();j++)
                 {
                     writer.write(professors.get(i).getSubjects().get(j));
-                    writer.write(" ");
+                    writer.write("\n");
                 }
-                writer.newLine();
-                writer.newLine();
             }
-            writer.write("Studenti:\n");
-            for(int i=0;i< students.size();i++)
-            {
+            writer.write(String.valueOf(students.size()));
+            writer.write("\n");
+            for(int i=0;i< students.size();i++) {
                 writer.write(students.get(i).getFirstName());
-                writer.write(" ");
+                writer.write("\n");
                 writer.write(students.get(i).getLastName());
                 writer.newLine();
-                writer.write("Materii si note:\n");
-                for(int j = 0; j<students.get(i).getSubjects().size(); j++)
-                {
-                    writer.write(students.get(i).getSubjects().get(j).getName());
-                    writer.write(" ");
-                    for(int k=0;k<students.get(i).getSubjects().get(j).getGrades().size();k++)
-                    {
+                writer.write(passwords.get(index++));
+                writer.newLine();
+                writer.write(String.valueOf(students.get(i).getSubjects().size()));
+                writer.newLine();
+                for (int j = 0; j < students.get(i).getSubjects().size(); j++) {
+                    writer.write(String.valueOf(students.get(i).getSubjects().get(j).getGrades().size()));
+                    writer.write("\n");
+                    for (int k = 0; k < students.get(i).getSubjects().get(j).getGrades().size(); k++) {
                         writer.write(students.get(i).getSubjects().get(j).getGrades().get(k).toString());
-                        writer.write(" ");
-                        writer.write(students.get(i).getSubjects().get(j).getDates().get(k).toString());
+                        writer.write("\n");
+                        writer.write(new SimpleDateFormat("yyyy-MM-dd").format(students.get(i).getSubjects().get(j).getDates().get(i)));
+                        writer.write("\n");
                     }
-                    writer.newLine();
                 }
-                writer.newLine();
-                writer.newLine();
             }
             System.out.println("Datele au fost afisate in " + fileName);
 
         } catch (IOException e) {
-            e.printStackTrace();
+            System.out.println("error");
         }
     }
 

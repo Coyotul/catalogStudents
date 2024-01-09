@@ -20,6 +20,12 @@ public class Subject
         grades.add(grade);
         dates.add(new Date());
     }
+
+    void addGradeWithDate(Integer grade,Date date)
+    {
+        grades.add(grade);
+        dates.add(date);
+    }
     public String getName()
     {
         return subject;
