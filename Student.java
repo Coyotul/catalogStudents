@@ -5,6 +5,8 @@ public class Student {
     private String lastName;
     private List<Subject> subjects;
 
+    public Float media=-1f;
+
     Student(String fName, String lName)
     {
         firstName = fName;

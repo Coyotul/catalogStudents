@@ -77,7 +77,8 @@ public class Source
                 System.out.println("3:Alegeti 3 sa sortati lista de elevi");
                 System.out.println("4:Alegeti 4 sa salvati toate datele in fisier");
                 System.out.println("5:Alegeti 5 sa afisati notele elevilor");
-                System.out.println("6:Citire backup");
+                System.out.println("6:Alegeti 6 sa calculati media unui elev");
+                System.out.println("7:Citire backup");
                 System.out.println("0:Exit");
                 int input2 = scanner.nextInt();
                 scanner.nextLine();
@@ -132,12 +133,7 @@ public class Source
                         System.out.println("Sortare efectuata cu succes");
                         continue;
                     case 3:
-                        students.sort(new Comparator<Student>() {
-                            @Override
-                            public int compare(Student o1, Student o2) {
-                                return o1.getLastName().compareTo(o2.getLastName());
-                            }
-                        });
+                        students.sort((o1, o2) -> o1.getLastName().compareTo(o2.getLastName()));
                         System.out.println("Sortare efectuata cu succes");
                         continue;
                     case 4:
@@ -166,14 +162,54 @@ public class Source
                         }
                         continue;
                     case 6:
+                        System.out.println("Introduceti Materia:");
+                        canAddGrade = false;
+                        String string = scanner.nextLine();
+                        for(int i=0;i<profesors.get(id).getSubjects().size();i++)
+                        {
+                            if(profesors.get(id).getSubjects().get(i).equals(string))
+                            {
+                                canAddGrade = true;
+                            }
+                        }
+                        if(!canAddGrade)
+                        {
+                            System.out.println("Nu aveti permisiunea de a adauga nota la aceasta materie");
+                            break;
+                        }
+                        System.out.println("Introduceti Numele si Prenumele Elevului:");
+                        String lname = scanner.nextLine();
+                        String fname= scanner.nextLine();
+                        float media = 0f;
+                        for(Student student:students)
+                        {
+                            if(lname.equals(student.getLastName()) && fname.equals(student.getFirstName()))
+                            {
+                                for(Subject subject:student.getSubjects())
+                                {
+                                    if(Objects.equals(subject.getName(), string)) {
+                                        for (Integer it:subject.getGrades())
+                                            media += it;
+                                        media/=subject.getGrades().size();
+                                        student.media = media;
+                                    }
+                                }
+                            }
+                        }
+                        System.out.println("Media este: ");
+                        System.out.println(media);
+                        continue;
+                    case 7:
                         ReadBackup(profesors,students,passwords);
+                        continue;
                 }
             }
             else
             {
                 System.out.println("Meniu Elev:");
                 System.out.println("1:Alegeti 1 ca sa va vedeti toate notele:");
-                System.out.println("2:Exit");
+                System.out.println("2:Alegeti 2 ca sa va vedeti mediile:");
+                System.out.println("3:Exit");
                 int input2 = scanner.nextInt();
                 scanner.nextLine();
                 if(input2 == 1)
@@ -192,6 +228,18 @@ public class Source
                     System.out.println();
                 }
                 continue;
+                }
+                else if(input2==2)
+                {
+                    for(int i=0;i<students.get(id-profesors.size()-1).getSubjects().size();i++)
+                    {
+                        System.out.print(students.get(id).getSubjects().get(i).getName());
+                        System.out.print(" ");
+                        if(students.get(i).media!=-1)
+                            System.out.print(students.get(i).media);
+                        else System.out.print("Medie necalculata");
+                        System.out.print("\n");
+                    }
                 }
             }
             id=-1;
