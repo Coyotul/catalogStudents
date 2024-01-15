@@ -34,6 +34,7 @@ public class Source
                 break;
             }
         }
+
         for(int i=0;i<students.size();i++)
         {
             if(passwords.get(i+profesors.size()-1).equals(password))
@@ -42,6 +43,7 @@ public class Source
                 break;
             }
         }
+
         if(id == -1)
         {
             System.out.println("Parola gresita");
@@ -133,7 +135,7 @@ public class Source
                         System.out.println("Sortare efectuata cu succes");
                         continue;
                     case 3:
-                        students.sort((o1, o2) -> o1.getLastName().compareTo(o2.getLastName()));
+                        students.sort(Comparator.comparing(Student::getLastName));
                         System.out.println("Sortare efectuata cu succes");
                         continue;
                     case 4:

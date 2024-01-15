@@ -1,6 +1,7 @@
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
-public class Student {
+public class Student implements Comparable {
     private String firstName;
     private String lastName;
     private List<Subject> subjects;
@@ -30,5 +31,10 @@ public class Student {
     public List<Subject> getSubjects()
     {
         return subjects;
+    }
+
+    @Override
+    public int compareTo(Object o) {
+        return 0;
     }
 }
